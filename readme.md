@@ -20,7 +20,9 @@ If you are unable to meet the above requirements then you will need to use the C
 ## Setting Up Your Computer
 
 [Setting Up Visual Studio](https://github.com/michaeltccd/ITSE1430-docs/blob/master/documentation/visualstudio/setup/readme.md)
+
 [Setting Up GitHub](https://github.com/michaeltccd/ITSE1430-docs/blob/master/documentation/github/setup/readme.md)
+
 [Configuring Windows](https://github.com/michaeltccd/ITSE1430-docs/blob/master/documentation/windows/setup/readme.md)
 
 ## Getting Started
