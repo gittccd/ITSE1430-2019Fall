@@ -26,8 +26,10 @@ indent_size = 4
 [*.json]
 indent_size = 2
 
-# General .NET styling
+########## General .NET ################
 [*.{cs,vb}]
+
+### Styling
 
 # This qualifiers (IDE0003 | IDE0009)
 dotnet_style_qualification_for_field                       = false : warning
@@ -53,11 +55,46 @@ dotnet_style_coalesce_expression                           = true : suggestion
 # Null conditional operator (IDE0031)
 dotnet_style_null_propagation                              = true : suggestion
 
+# Prefer auto properties (IDE0032)
+dotnet_style_prefer_auto_properties                        = true : suggestion
+
 # Explicit tuple names (IDE0033)
 dotnet_style_explicit_tuple_names                          = true : suggestion
 
-# C# styling
+# Do not prefer inferred tuple names (IDE0037)
+# Do not prefer anonymous type member names
+dotnet_style_prefer_inferred_tuple_names                   = false: warning
+dotnet_style_prefer_inferred_anonymous_type_member_names   = false: warning
+
+# Require accessibility modifier (IDE0040)
+dotnet_style_require_accessibility_modifiers               = for_non_interface_members: suggestion
+
+# Prefer null check over ReferenceEquals (IDE0041)
+dotnet_style_prefer_is_null_check_over_reference_equality_method = true: suggestion
+
+# Prefer fields to be marked readonly if they qualify (IDE044)
+dotnet_style_readonly_field                                = true: suggestion
+
+# Prefer conditional over if-else (IDE0045)
+dotnet_style_prefer_conditional_expression_over_assignment = true: suggestion
+
+# Prefer conditional over return (IDE0046)
+dotnet_style_prefer_conditional_expression_over_return     = true: suggestion
+
+# Prefer compound assignment over simple (IDE0054)
+dotnet_style_prefer_compound_assignment                    = true: suggestion
+
+# Flag methods with unused parameters if non-public (IDE0060)
+dotnet_code_quality_unused_parameters                      = non_public: warning
+
+### Formatting - does not use the suggestion, warning, etc format...
+dotnet_sort_system_directives_first                        = true
+dotnet_separate_import_directive_groups                    = true
+
+########## C# ################
 [*.cs]
+
+### styling
 
 # var vs explicit types (IDE0007 | IDE0008)
 csharp_style_var_for_built_in_types                                       = true : suggestion
@@ -100,12 +137,46 @@ csharp_style_expression_bodied_accessors                                  = true
 # Simplify default expressions (IDE0034)
 csharp_prefer_simple_default_expression                                   = true : suggestion
 
+# Prefer local function over anonymous (IDE0039)
+csharp_style_pattern_local_over_anonymous_function                        = false : suggestion
+
 # Conditional delegate calls (IDE0041)
 csharp_style_conditional_delegate_call                                    = true : suggestion
 
-#####
-# Formatting - does not use the suggestion, warning, etc format...
-dotnet_sort_system_directives_first                                       = true
+# Do not prefer deconstructed variable declaration (IDE0042)
+csharp_style_deconstructed_variable_declaration                           = false : suggestion
+
+# Use expression bodied lambdas (IDE0053)
+csharp_style_expression_bodied_lambdas                                    = true : suggestion
+
+# Do not prefer index operator (IDE0056)
+csharp_style_prefer_index_operator                                        = false : suggestion
+
+# Do not prefer range operator (IDE0057)
+csharp_style_prefer_range_operator                                        = false : suggestion
+
+# No preferences for unused return values (IDE0058)
+#csharp_style_unused_value_expression_statement_preference                 = (discard_variable|unused_local_variable) : silent
+
+# No preferences for unused assignment values (IDE0059)
+#csharp_style_unused_value_assignment_preference                 = (discard_variable|unused_local_variable) : silent
+
+# Use expression bodied local functions when on single line (IDE0061)
+csharp_style_expression_bodied_local_functions                            = when_on_single_line : suggestion
+
+# Prefer local functions to be static (IDE0062)
+csharp_prefer_static_local_function                                       = true: suggestion
+
+# Do not use simple using statement (IDE0063)
+csharp_prefer_simple_using_statement                                      = false: warning
+
+# Put using directives at top of file (IDE0065)
+csharp_using_directive_placement                                          = outside_namespace : warning
+
+# Do not prefer switch expression (IDE0066)
+csharp_style_prefer_switch_expression                                     = false: suggestion
+
+### Formatting - does not use the suggestion, warning, etc format...
 
 # New lines
 csharp_new_line_before_open_brace                                         = control_blocks, events, local_functions, methods, object_collection, properties, types
@@ -120,13 +191,42 @@ csharp_new_line_between_query_expression_clauses                          = fals
 csharp_indent_case_contents                                               = false
 csharp_indent_switch_labels                                               = true
 csharp_indent_labels                                                      = flush_left
+csharp_indent_block_contents                                              = true
+csharp_indent_braces                                                      = false
+csharp_indent_case_contents_when_block                                    = false
 
 # Spacing
 csharp_space_after_cast                                                   = false
 csharp_space_after_keywords_in_control_flow_statements                    = true
-csharp_space_between_method_declaration_parameter_list_parentheses        = true
-csharp_space_between_method_call_parameter_list_parentheses               = false
 csharp_space_between_parentheses                                          = false
+
+csharp_space_before_colon_in_inheritance_clause                           = true
+csharp_space_after_colon_in_inheritance_clause                            = true
+
+csharp_space_around_binary_operators                                      = ignore
+
+csharp_space_between_method_declaration_parameter_list_parentheses        = true
+csharp_space_between_method_declaration_empty_parameter_list_parentheses  = false
+csharp_space_between_method_declaration_name_and_open_parenthesis         = true
+
+csharp_space_between_method_call_parameter_list_parentheses               = false
+csharp_space_between_method_call_empty_parameter_list_parentheses         = false
+csharp_space_between_method_call_name_and_opening_parenthesis             = true
+
+csharp_space_after_comma                                                  = true
+csharp_space_before_comma                                                 = false
+csharp_space_after_dot                                                    = false
+csharp_space_before_dot                                                   = false
+
+csharp_space_after_semicolon_in_for_statement                             = true
+csharp_space_before_semicolon_in_for_statement                            = false
+
+# Remove extra spaces (ignore | false)
+csharp_space_around_declaration_statements                                = false
+
+csharp_space_before_open_square_brackets                                  = false
+csharp_space_between_emptyn_square_brackets                               = false
+csharp_space_between_square_brackets                                      = false
 
 # Wrapping
 csharp_preserve_single_line_statements                                    = false
