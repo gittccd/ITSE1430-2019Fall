@@ -1,5 +1,5 @@
 # Maze (ITSE 1430)
-## Version 1.0
+## Version 1.1
 
 In this lab you will create a simple text maze. The maze will consist of a set of rooms that the user can navigate to. The user will use simple text commands to navigate. The goal of the maze is to find the exit. When the user finds the exit they win.
 
@@ -173,6 +173,37 @@ Adjust the move commands to take direction into account. For example if the play
 When a player enters a new room they should remain facing the same direction they were before (e.g. West if they had turned to the left).
 
 *Note: There are different ways to implement movement with direction commands. Probably the easiest approach is to define all room relationships in terms of direction (e.g. room A is West of room B). When implementing the move command translate the relative direction (`forward`, `backward`) into direction. For example if the player is currently facing `West` and they enter `move forward` then that translates to the current direction of `West`. If they enter `move left` then that translates to `South`.*
+
+### Implementation Notes
+
+The following is one possible approach to solving this problem. Here are the possible combinations of movement when facing each direction.
+
+| Direction | Move | Room |
+| - | - | - |
+| North | Forward | North |
+| North | Right | East |
+| North | Around | South |
+| North | Left | West |
+| East | Forward | East |
+| East | Right | South |
+| East | Around | West |
+| East | Left | North |
+| South | Forward | South |
+| South | Right | West |
+| South | Around | North |
+| South | Left | East |
+| West | Forward | West |
+| West | Right | North |
+| West | Around | East |
+| West | Left | South |
+
+While you could implement this as a series of `if-else` or `switch` statements there is an easier approach. Imagine that we assign a numeric value to each direction (North = 0, East = 1, South = 2, West = 3). Movement can now be defined in terms of offset from the current direction: (Left = -1, Forward = 0, Right = 1, Around = 2). As an example if the user is facing `East` (1) and they turn `Right` (1) they are going to room `South` (2). There are two boundary cases to handle.
+
+The first boundary case is moving `Right` from `West` would increment the value to `3 + 1 = 4` which is outside the valid range. Using modulus 4 we can ensure the value is always between 0 and 3. In this boundary case `4 % 4 = 0` which correctly indicates `North` (0).
+
+The second boundary case is when moving 'Left' from 'North'. In this case the value wouuld be negative `0 + -1 = -1`. Modulus doesn't work here but we can rely on a property of modulus. If we add `4` to the value before modulus then it would always restrict the value to between `0` and `7`. Then when we modulus we are back to our `0` to `3` value. In this particular boundary case we would end up with `0 + -1 + 4 = 3` which is `West`. 
+
+In summary the following algorithm should return the proper room based upon the previous discussion `(direction + offset + 4) % 4`. Of course this should be wrapped in a function to make it easy to adjust later, if needed.
 
 ### Acceptance Criteria
 
