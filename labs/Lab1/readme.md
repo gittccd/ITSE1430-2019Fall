@@ -1,5 +1,5 @@
 # Maze (ITSE 1430)
-## Version 1.1
+## Version 1.2
 
 In this lab you will create a simple text maze. The maze will consist of a set of rooms that the user can navigate to. The user will use simple text commands to navigate. The goal of the maze is to find the exit. When the user finds the exit they win.
 
@@ -111,12 +111,67 @@ The command parser should read the entire [line](https://docs.microsoft.com/en-u
 - Case does not matter.
 - If an unknown command is entered an error is displayed and the parser prompts again until the player enters a valid command.
 - Empty commands (e.g. empty lines) are ignored.
-- Spacing between tokens does not matter so `move left`, `move   left` and `   move left ` all do the same thing. A function to convert strings to command identifiers would be very useful here.
 - Valid commands should return a "command code" to the caller so the caller can handle the command.
 
-*Note: Splitting the line into [tokens](https://docs.microsoft.com/en-us/dotnet/api/system.string.split?view=netframework-4.8) based upon whitespace and then [joining](https://docs.microsoft.com/en-us/dotnet/api/system.string.join?view=netframework-4.8) them back together can make handling whitespace considerably easier.*
-
 The first command will be `quit`. When entered the player is prompted for confirmation and, if confirmed, the program terminates. Otherwise the command is ignored.
+
+### Implementation Notes
+
+You can use strings or integrals to define the "commands" of your program. [Enumerations](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/enumeration-types) are generally the best option here but we will not cover them in class. They work just like other languages so you may use them if you like. It would simplify your code and make it more readable.
+
+```csharp
+enum Command
+{
+   Quit = 1,
+   MoveForward,
+   MoveBackward
+}
+
+//They work just like types
+static Command GetCommand ()
+{
+   ...
+   return Command.Quit;
+}
+```
+
+### Parser Implementation
+
+To implement the parser you will need several functions. The following is one such approach that you might use.
+
+The first function you'll need is a parser to convert strings to commands. This is where you will handle spacing and casing rules.
+
+```csharp
+static Command ParseCommand ( string input )
+{   
+}
+```
+
+This function is just responsible for figuring out what command the user entered. It is possible that the user entered an invalid command so this function should have some way of conveying that back to the caller.
+
+The next function that will be needed is the function that handles user input and command validation. This function will get the input from the user, call the parsing function to convert it to a command then determine if the command is valid. If it isn't then the function should report the error to the user and prompt again.
+
+```csharp
+static Command GetCommand ()
+{   
+   //Get input from user
+   Command command = ParseCommand(input);
+   //If valid then return the command otherwise display error and keep prompting
+}
+```
+
+The last function you will likely need is the function to handle the commands. Some commands can be handled directly by the handler (e.g. `turn`) but most will need to be returned to the room so it can implement the room-specific logic (e.g. `move`). In any case it will rely on the earlier function to get the next command to process.
+
+```csharp
+static Command HandleCommand ()
+{
+   Command command = GetCommand();
+   //Handle generic commands like quit and turn
+
+   //Pass the rest back to the room to handle
+   return command;
+}
+```
 
 ### Acceptance Criteria
 
@@ -124,20 +179,18 @@ The first command will be `quit`. When entered the player is prompted for confir
 - Quit displays a confirmation and, if confirmed, the program terminates.
 - Empty lines are ignored.
 - Case is ignored.
-- Spacing within commands are ignored.
 
 ## Story 5
 
-Implement the `examine` command to examine a room.
+Implement the exit logic for the game.
 
-When the player uses this command the current room is checked to see if it is an exit. If it is the exit then display a congratulatory message to the player. The player has won and the game terminates.
+When the player enters the exit room they get a congratulatory message. The player has won and the program can termine.
 
-*Note: Players do not automatically win by entering the exit room. They must examine it first.*
+Since the user will exit the game when they get to the room it must be a leaf room. There will be no option for the player to continue through the room.
 
 ### Acceptance Criteria
 
 - If the room is the exit room then a congratulatory message is shown and the program terminates.
-- If the room is not the exit room then display a generic message about finding nothing.
 
 ## Story 6
 
@@ -152,7 +205,7 @@ This command requires an argument to specify which way to move.
 
 When the player enters a room display the room's description including any exit doors.
 
-If there is no room in the given direction then the player gets a message about not being able to move in that direction (e.g. `You walk into the wall. You cannot move that direction.`). The player sees the same information as they saw when they first entered the room and must enter a new command.
+If there is no room in the given direction then the player should get an error as normal.
 
 ### Acceptance Criteria
 
@@ -163,6 +216,10 @@ If there is no room in the given direction then the player gets a message about 
 ## Story 7
 
 Implement the `turn` commands to allow the user to change directions.
+
+- `turn left` turns the player to the left.
+- `turn right` turns the playre to the right.
+- `turn around` turns the player around.
 
 Players can change the direction (`North`, `Sout`, `East`, `West`) they are facing as they navigate the maze. Track the current direction the player is facing. 
 
@@ -203,7 +260,17 @@ The first boundary case is moving `Right` from `West` would increment the value 
 
 The second boundary case is when moving 'Left' from 'North'. In this case the value wouuld be negative `0 + -1 = -1`. Modulus doesn't work here but we can rely on a property of modulus. If we add `4` to the value before modulus then it would always restrict the value to between `0` and `7`. Then when we modulus we are back to our `0` to `3` value. In this particular boundary case we would end up with `0 + -1 + 4 = 3` which is `West`. 
 
-In summary the following algorithm should return the proper room based upon the previous discussion `(direction + offset + 4) % 4`. Of course this should be wrapped in a function to make it easy to adjust later, if needed.
+In summary the following algorithm should return the proper room based upon the previous discussion.
+
+```csharp
+return (direction + offset + 4) % 4;
+```
+
+Of course this should be wrapped in a function to make it easy to adjust later, if needed. Also the use of enumerations would be very helpful here as well. To convert an enumeration to an integral (for calculation purposes) use a C-style cast.
+
+```csharp
+(int)direction;
+```
 
 ### Acceptance Criteria
 
